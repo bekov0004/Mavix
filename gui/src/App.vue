@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed, nextTick, watch } from 'vue';
+import * as XLSX from 'xlsx';
 
 const translations = ref({});
 const search = ref('');
@@ -10,6 +11,60 @@ const currentPage = ref(1);
 const itemsPerPage = ref(50);
 
 const pendingDelete = ref(new Set());
+
+const fileInput = ref(null);
+
+const exportToExcel = () => {
+  const keysToExport = filteredKeys.value;
+  const langs = languages.value;
+
+  const data = keysToExport.map(key => {
+    const row = { 'Translation Key': key };
+    langs.forEach(lang => {
+      row[lang] = translations.value[lang][key] || '';
+    });
+    return row;
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Translations");
+
+  XLSX.writeFile(workbook, `translations_${new Date().toISOString().slice(0, 10)}.xlsx`);
+  showToast('Excel exported successfully!');
+};
+
+const triggerImport = () => fileInput.value.click();
+
+const importFromExcel = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: 'array' });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+    if (jsonData.length > 0) {
+      jsonData.forEach(row => {
+        const key = row['Translation Key'];
+        if (!key) return;
+
+        languages.value.forEach(lang => {
+          if (row[lang] !== undefined) {
+            if (!translations.value[lang]) translations.value[lang] = {};
+            translations.value[lang][key] = String(row[lang]);
+          }
+        });
+      });
+      showToast('Data imported! Don\'t forget to save.');
+    }
+    event.target.value = '';
+  };
+  reader.readAsArrayBuffer(file);
+};
 
 const toggleDelete = (key) => {
   if (pendingDelete.value.has(key)) {
@@ -191,6 +246,8 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-[#f8fafc] text-[#1e293b] dark:bg-[#0f172a] dark:text-slate-200 transition-colors duration-300 font-sans text-[14px] pb-10">
 
+    <input type="file" ref="fileInput" class="hidden" accept=".xlsx, .xls" @change="importFromExcel" />
+
     <Transition name="slide-up">
       <div v-if="toast.show" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 dark:bg-indigo-600 text-white px-6 py-3 rounded-2xl shadow-2xl font-medium text-sm border border-white/10">
         <span>{{ toast.message }}</span>
@@ -218,6 +275,23 @@ onMounted(() => {
       </div>
 
       <div class="flex items-center gap-4">
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl mr-2">
+          <button @click="triggerImport" title="Import from Excel" class="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </button>
+          <button @click="exportToExcel" title="Export to Excel" class="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+        </div>
+
         <button @click="toggleTheme" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:ring-2 hover:ring-indigo-500/20 transition-all cursor-pointer">
           <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
           <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
