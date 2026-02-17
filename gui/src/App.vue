@@ -142,8 +142,15 @@ const fetchData = async () => {
   loading.value = true;
   try {
     const res = await fetch('/api/translations');
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || 'Server error');
+    }
     translations.value = await res.json();
-  } catch (e) { console.error("Ошибка:", e); }
+  } catch (e) {
+    showToast(e.message);
+    console.error("Ошибка:", e);
+  }
   loading.value = false;
 };
 
