@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+@layer base {
+    :root {
+        --background: #f8fafc;
+        --foreground: #1e293b;
+    }
+    @variant dark {
+        :root {
+            --background: #0f172a;
+            --foreground: #f1f5f9;
+        }
+    }
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.3s ease;
+}
+
+@variant dark (&:where(.dark, .dark *));
