@@ -62,10 +62,21 @@ const fetchData = async () => {
 };
 
 const languages = computed(() => Object.keys(translations.value));
+
 const allKeys = computed(() => {
   const keys = new Set();
   Object.values(translations.value).forEach(obj => Object.keys(obj).forEach(k => keys.add(k)));
-  return Array.from(keys).filter(k => k.toLowerCase().includes(search.value.toLowerCase())).sort();
+
+  const query = search.value.toLowerCase();
+
+  return Array.from(keys).filter(k => {
+    if (k.toLowerCase().includes(query)) return true;
+
+    return languages.value.some(lang => {
+      const val = translations.value[lang][k];
+      return val && val.toLowerCase().includes(query);
+    });
+  }).sort();
 });
 
 const save = async () => {
@@ -130,7 +141,8 @@ onMounted(() => {
           <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
         </button>
 
-        <input v-model="search" placeholder="Search keys..." class="bg-slate-100 border-none rounded-xl px-4 py-2 text-sm w-64 focus:ring-2 focus:ring-indigo-500/20 outline-hidden transition-all dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
+        <input v-model="search" placeholder="Search keys or values..." class="bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-2.5 text-sm w-96 focus:ring-2 focus:ring-indigo-500/20 outline-hidden transition-all dark:text-white dark:placeholder-slate-500" />
+
         <button @click="openModal" class="cursor-pointer hover:bg-slate-100 px-4 py-2 rounded-xl text-sm font-semibold transition dark:text-slate-300 dark:hover:bg-slate-800">Add Key</button>
         <button @click="save" class="cursor-pointer bg-slate-900 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-indigo-600 shadow-xl shadow-indigo-100 dark:shadow-none dark:bg-indigo-600 dark:hover:bg-indigo-500 transition-all active:scale-95">Save Changes</button>
       </div>
