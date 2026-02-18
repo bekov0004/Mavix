@@ -1,70 +1,65 @@
 # 🚀 Mavix
 
-**Mavix** — это визуальный редактор (GUI) для JSON-файлов локализации. Он позволяет управлять переводами вашего проекта через удобный веб-интерфейс прямо в браузере, поддерживая вложенные структуры, поиск и интеграцию с Excel.
+**Mavix** is a visual editor (GUI) for JSON localization files. It allows you to manage your project's translations through a convenient web interface directly in your browser, with support for nested structures, search, and Excel integration.
 
 ---
 
-## 📦 Установка
+## 📦 Installation
 
-Установите пакет глобально или локально в ваш проект:
+Install the package globally or locally in your project:
 
 ```bash
-# Локально (рекомендуется)
+# Local installation (recommended)
 npm install mavix --save-dev
 
-# Или глобально
+# Or global installation
 npm install -g mavix
-
 ```
 
 ---
 
-## ⚙️ Настройка
+## ⚙️ Configuration
 
-Для работы Mavix необходимо создать файл конфигурации **`mavix.config.json`** в корне вашего проекта. Это укажет инструменту, где искать ваши файлы переводов.
+To use Mavix, you need to create a configuration file named **`mavix.config.json`** in the root of your project. This tells the tool where to find your translation files.
 
 ```json
 {
   "localesPath": "./src/i18n/locales"
 }
-
 ```
 
-* **localesPath**: Путь к папке, где лежат ваши файлы `{lang}.json`.
-* **languages** (опционально): Список поддерживаемых языков.
+* **localesPath**: Path to the folder containing your `{lang}.json` files.
+* **languages** (optional): List of supported languages.
 
 ---
 
-## 🚀 Запуск
+## 🚀 Running
 
-После установки и создания конфига, запустите Mavix командой:
+After installation and configuration, start Mavix with:
 
 ```bash
-# Если установлен локально
+# If installed locally
 npx mavix
 
-# Если установлен глобально
+# If installed globally
 mavix
-
 ```
 
-После запуска откройте в браузере: `http://localhost:3000` (или порт, указанный в консоли).
+After starting, open your browser and go to: `http://localhost:3000` (or the port shown in the console).
 
 ---
 
-## ✨ Основные функции
+## ✨ Features
 
-* **📝 Редактирование JSON:** Удобная таблица для всех языков сразу.
-* **🌳 Поддержка Dot-Notation:** Работайте с ключами вида `user.profile.name`, Mavix сам соберет их в правильное дерево.
-* **📊 Excel Import/Export:** Выгружайте переводы для переводчиков и загружайте обратно без потерь.
-* **🔍 Глобальный поиск:** Мгновенный поиск по ключам и значениям.
-* **🌓 Dark Mode:** Поддержка темной темы.
-
----
-
-## 🛠 Требования
-
-* **Node.js**: версии 16.x или выше.
-* **Формат файлов**: JSON.
+* **📝 JSON Editing:** Convenient table view for all languages at once.
+* **🌳 Dot-Notation Support:** Work with keys like `user.profile.name` — Mavix automatically builds the correct nested structure.
+* **📊 Excel Import/Export:** Export translations for translators and import them back without data loss.
+* **🔍 Global Search:** Instantly search across keys and values.
+* **🌓 Dark Mode:** Built-in dark theme support.
 
 ---
+
+## 🛠 Requirements
+
+* **Node.js**: version 16.x or higher
+* **File format**: JSON
