@@ -5,7 +5,7 @@ import path from 'path';
 import { flatten, unflatten } from 'flat';
 
 const router = express.Router();
-const CONFIG_FILENAME = 'transkit.config.json';
+const CONFIG_FILENAME = 'mavix.config.json';
 
 const loadConfig = async () => {
     const configPath = path.join(process.cwd(), CONFIG_FILENAME);
@@ -49,7 +49,7 @@ router.get('/translations', async (req, res) => {
         }
         res.json(data);
     } catch (e) {
-        console.error("Transkit Error:", e.message);
+        console.error("Mavix Error:", e.message);
         res.status(500).json({ error: e.message });
     }
 });
@@ -68,7 +68,7 @@ router.post('/save', async (req, res) => {
         }
         res.json({ success: true });
     } catch (e) {
-        console.error("Transkit Error:", e.message);
+        console.error("Mavix Error:", e.message);
         res.status(500).json({ error: e.message });
     }
 });

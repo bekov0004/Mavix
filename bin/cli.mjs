@@ -27,7 +27,7 @@ if (existsSync(distPath)) {
 
 const PORT = 4500;
 app.listen(PORT, async () => {
-    console.log(`\x1b[32m✔ Transkit UI: http://localhost:${PORT}\x1b[0m`);
+    console.log(`\x1b[32m✔ Mavix UI: http://localhost:${PORT}\x1b[0m`);
     try {
         await open(`http://localhost:${PORT}`);
     } catch (err) {

@@ -277,8 +277,8 @@ onMounted(() => {
 
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex justify-between items-center dark:bg-slate-900/80 dark:border-slate-800">
       <div class="flex items-center gap-3">
-        <div class="size-10 bg-linear-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg flex items-center justify-center text-white font-black leading-none uppercase">TK</div>
-        <h1 class="text-xl font-bold tracking-tight dark:text-white uppercase">Transkit</h1>
+        <div class="size-10 bg-linear-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg flex items-center justify-center text-white font-black leading-none uppercase">M</div>
+        <h1 class="text-xl font-bold tracking-tight dark:text-white uppercase">Mavix</h1>
       </div>
 
       <div class="flex items-center gap-4">

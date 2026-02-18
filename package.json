@@ -1,9 +1,9 @@
 {
-  "name": "transkit",
+  "name": "mavix",
   "version": "1.0.0",
   "type": "module",
   "bin": {
-    "transkit": "./bin/cli.mjs"
+    "mavix": "./bin/cli.mjs"
   },
   "files": [
     "bin/",
