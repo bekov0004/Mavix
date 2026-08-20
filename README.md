@@ -6,13 +6,17 @@
 
 ## 📦 Installation
 
-Install the package globally or locally in your project:
+There are two ways to install Mavix — pick the one that fits how you plan to use it.
+
+**Local installation (recommended)** — Mavix is added to your project's `devDependencies` and its version is locked in `package-lock.json`. Everyone on the team (and CI) gets the exact same version automatically via `npm install`, and you run it with `npx mavix`. Use this for real projects, especially team ones.
 
 ```bash
-# Local installation (recommended)
 npm install mavix --save-dev
+```
 
-# Or global installation
+**Global installation** — Mavix is installed once for your whole machine and becomes available everywhere as just `mavix`, without adding it to any project's dependencies. Convenient if you just want to quickly try Mavix or use it across many personal projects, but the version isn't tied to a specific project, so teammates might end up running different versions.
+
+```bash
 npm install -g mavix
 ```
 
