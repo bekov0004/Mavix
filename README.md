@@ -20,16 +20,65 @@ npm install -g mavix
 
 ## ⚙️ Configuration
 
-To use Mavix, you need to create a configuration file named **`mavix.config.json`** in the root of your project. This tells the tool where to find your translation files.
+Mavix reads a **`mavix.config.json`** file from the root of your project to know where your translation files live. There are two ways to configure it, depending on how your project organizes locales.
+
+### Option 1 — Flat folder (one file per language)
+
+Use this when all your languages live as single files in one folder:
+
+```
+locales/
+  en.json
+  ru.json
+  tj.json
+```
 
 ```json
 {
-  "localesPath": "./src/i18n/locales"
+  "localesPath": "./locales"
 }
 ```
 
-* **localesPath**: Path to the folder containing your `{lang}.json` files.
-* **languages** (optional): List of supported languages.
+* **localesPath**: path to the folder containing your `{lang}.json` files.
+* The language code is taken from the file name (`en.json` → `en`).
+
+### Option 2 — Per-language folder with namespace files
+
+Use this when each language has its own folder containing multiple files (namespaces) — a common setup with `i18next`, `next-intl`, and similar libraries:
+
+```
+src/i18n/messages/
+  en/
+    common.json
+    auth.json
+    employer.json
+  ru/
+    common.json
+    auth.json
+    employer.json
+  tj/
+    common.json
+    auth.json
+    employer.json
+```
+
+```json
+{
+  "languages": {
+    "en": "src/i18n/messages/en",
+    "ru": "src/i18n/messages/ru",
+    "tj": "src/i18n/messages/tj"
+  }
+}
+```
+
+* **languages**: an explicit map of language code → path. Each path can point to either:
+  * a **folder** — Mavix scans it recursively and finds every `.json` file inside, no matter how deep. Each file becomes a "namespace" (shown in Mavix as `namespace:key.path`, e.g. `common:app.title`).
+  * a **single file** — used directly as that language's translations (no namespace prefix).
+* Folders are scanned on every request, so you don't need to restart Mavix after adding a new namespace file — just make sure the file exists before adding new keys to it, or add the key through Mavix itself and it will be created automatically.
+* If a path in `languages` doesn't exist on disk, Mavix logs a warning and skips that language instead of crashing — useful while a translation folder is still being set up.
+
+> ⚠️ **Only one mode is active at a time.** If `languages` is present in the config (and not empty), it takes priority and `localesPath` is ignored. Use `localesPath` only for the simple flat-file setup.
 
 ---
 
@@ -45,7 +94,7 @@ npx mavix
 mavix
 ```
 
-After starting, open your browser and go to: `http://localhost:3000` (or the port shown in the console).
+After starting, open your browser and go to: `http://localhost:4500` (or the port shown in the console).
 
 ---
 
@@ -53,6 +102,7 @@ After starting, open your browser and go to: `http://localhost:3000` (or the por
 
 * **📝 JSON Editing:** Convenient table view for all languages at once.
 * **🌳 Dot-Notation Support:** Work with keys like `user.profile.name` — Mavix automatically builds the correct nested structure.
+* **📁 Flexible File Layout:** Works with a single flat folder of language files, or per-language folders split into multiple namespace files — pick whichever matches your project.
 * **📊 Excel Import/Export:** Export translations for translators and import them back without data loss.
 * **🔍 Global Search:** Instantly search across keys and values.
 * **🌓 Dark Mode:** Built-in dark theme support.

@@ -3,6 +3,7 @@ import { ref, onMounted, computed, nextTick, watch } from 'vue';
 import * as XLSX from 'xlsx';
 
 const translations = ref({});
+const originalTranslations = ref({});
 const search = ref('');
 const loading = ref(false);
 const isDark = ref(localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches));
@@ -146,7 +147,19 @@ const fetchData = async () => {
       const errorData = await res.json();
       throw new Error(errorData.error || 'Server error');
     }
-    translations.value = await res.json();
+    const { translations: byKey } = await res.json();
+
+    // Convert uiKey -> lang -> value into lang -> uiKey -> value for the table UI.
+    const byLang = {};
+    for (const [uiKey, langValues] of Object.entries(byKey)) {
+      for (const [lang, value] of Object.entries(langValues)) {
+        if (!byLang[lang]) byLang[lang] = {};
+        byLang[lang][uiKey] = value;
+      }
+    }
+
+    translations.value = byLang;
+    originalTranslations.value = JSON.parse(JSON.stringify(byLang));
   } catch (e) {
     showToast(e.message);
     console.error("Ошибка:", e);
@@ -231,16 +244,35 @@ const save = async () => {
       });
     });
 
-    await fetch('/api/save', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ translations: translations.value })
+    // Mavix has no delete-from-disk endpoint yet; deleted keys are just
+    // dropped from the UI and won't be included in the change set below.
+    const changes = [];
+    languages.value.forEach(lang => {
+      Object.entries(translations.value[lang] || {}).forEach(([uiKey, value]) => {
+        const original = originalTranslations.value[lang]?.[uiKey];
+        if (original !== value) {
+          changes.push({ uiKey, lang, value });
+        }
+      });
     });
 
+    if (changes.length > 0) {
+      const res = await fetch('/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ changes })
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Server error');
+      }
+    }
+
+    originalTranslations.value = JSON.parse(JSON.stringify(translations.value));
     pendingDelete.value.clear();
     showToast('Changes saved successfully! 🚀');
   } catch (e) {
-    showToast('Error saving changes...');
+    showToast(e.message || 'Error saving changes...');
   }
 };
 
