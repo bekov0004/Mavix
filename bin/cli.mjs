@@ -25,9 +25,10 @@ if (existsSync(distPath)) {
     console.warn('\x1b[33m⚠ Warning: gui/dist not found. Run "npm run gui:build" first.\x1b[0m');
 }
 
-const PORT = 4500;
+const PORT = Number(process.env.MAVIX_PORT) || 4500;
 app.listen(PORT, async () => {
     console.log(`\x1b[32m✔ Mavix UI: http://localhost:${PORT}\x1b[0m`);
+    if (process.env.MAVIX_NO_OPEN === '1') return;
     try {
         const child = await open(`http://localhost:${PORT}`);
         child.once('error', () => {

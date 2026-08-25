@@ -12,7 +12,7 @@ demonstrating one of the three file layouts Mavix supports.
 | `case-b-language-folders/` | per-language folder, namespace files inside | `languages` |
 | `case-c-namespace-folders/` | per-namespace folder, language files inside | `namespacesPath` |
 
-## Running one
+## Running one at a time
 
 From the repo root:
 
@@ -24,3 +24,13 @@ npm run manual:c   # case-c-namespace-folders
 
 Then open `http://localhost:4500/` in your browser. Stop with `Ctrl+C` before
 starting a different case (they all use the same port).
+
+## Running all three at once
+
+```bash
+npm run manual:all
+```
+
+This starts all three cases together (ports 4501/4502/4503) plus a landing
+page at `http://localhost:4500` with a link to each — open it and switch
+between cases by clicking, no restart needed. `Ctrl+C` stops all of them.

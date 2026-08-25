@@ -18,7 +18,8 @@
     "test": "node --test test/automated/*.test.mjs",
     "manual:a": "cd test/manual/case-a-flat && node ../../../bin/cli.mjs",
     "manual:b": "cd test/manual/case-b-language-folders && node ../../../bin/cli.mjs",
-    "manual:c": "cd test/manual/case-c-namespace-folders && node ../../../bin/cli.mjs"
+    "manual:c": "cd test/manual/case-c-namespace-folders && node ../../../bin/cli.mjs",
+    "manual:all": "node test/manual/serve-all.mjs"
   },
   "dependencies": {
     "express": "^4.18.2",
