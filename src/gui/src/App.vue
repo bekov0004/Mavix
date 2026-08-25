@@ -15,6 +15,22 @@ const pendingDelete = ref(new Set());
 
 const fileInput = ref(null);
 
+const editingCell = ref(null);
+const cellId = (key, lang) => `${key}::${lang}`;
+const startEditing = async (key, lang) => {
+  editingCell.value = cellId(key, lang);
+  await nextTick();
+  const el = document.querySelector(`textarea[data-cell="${CSS.escape(cellId(key, lang))}"]`);
+  if (el) {
+    el.focus();
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+};
+const stopEditing = () => {
+  editingCell.value = null;
+};
+
 const exportToExcel = () => {
   const keysToExport = filteredKeys.value;
   const langs = languages.value;
@@ -372,14 +388,25 @@ onMounted(() => {
                   </span>
               </td>
 
-              <td v-for="lang in languages" :key="lang" class="p-4">
+              <td v-for="lang in languages" :key="lang" class="p-4 max-w-xs">
+                  <div
+                      v-if="editingCell !== cellId(key, lang)"
+                      @click="!pendingDelete.has(key) && startEditing(key, lang)"
+                      class="w-full max-w-xs p-2 text-sm truncate rounded-lg border border-transparent transition-all dark:text-slate-200"
+                      :class="[
+                        !pendingDelete.has(key) ? 'cursor-text hover:border-slate-200 dark:hover:border-slate-700' : 'cursor-not-allowed opacity-30',
+                        !translations[lang][key] && !pendingDelete.has(key) ? 'bg-red-50/50 dark:bg-red-900/10' : ''
+                      ]"
+                  >{{ translations[lang][key] || ' ' }}</div>
                   <textarea
+                      v-else
                       v-model="translations[lang][key]"
                       rows="1"
+                      :data-cell="cellId(key, lang)"
                       :disabled="pendingDelete.has(key)"
-                      class="w-full p-2 text-sm bg-transparent border border-transparent hover:border-slate-200 focus:border-indigo-500 focus:bg-white rounded-lg outline-none transition-all resize-none overflow-hidden dark:text-slate-200 dark:hover:border-slate-700 dark:focus:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
+                      class="w-full p-2 text-sm bg-white border border-indigo-500 rounded-lg outline-none transition-all resize-none overflow-hidden dark:text-slate-200 dark:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
                       @input="(e) => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px' }"
-                      :class="!translations[lang][key] && !pendingDelete.has(key) ? 'bg-red-50/50 dark:bg-red-900/10' : ''"
+                      @blur="stopEditing"
                   ></textarea>
               </td>
 
