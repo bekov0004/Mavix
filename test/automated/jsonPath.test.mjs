@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { flattenLeaves, setDeep, dotPathToJsonPath, buildUiKey, parseUiKey } from '../src/server/jsonPath.mjs';
+import { flattenLeaves, setDeep, dotPathToJsonPath, buildUiKey, parseUiKey } from '../../src/server/jsonPath.mjs';
 
 describe('jsonPath.mjs', () => {
     test('flattenLeaves yields dot paths for nested objects', () => {

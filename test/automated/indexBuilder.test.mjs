@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { buildIndex } from '../src/server/indexBuilder.mjs';
+import { buildIndex } from '../../src/server/indexBuilder.mjs';
 
 describe('indexBuilder.mjs buildIndex', () => {
     test('builds flat translations keyed by uiKey -> lang -> value', () => {

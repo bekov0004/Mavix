@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import express from 'express';
 import path from 'path';
 
-import apiRouter from '../src/server/index.mjs';
+import apiRouter from '../../src/server/index.mjs';
 import { makeTmpDir, writeJson, readJson, rmDir } from './helpers.mjs';
 
 const startServer = () => {

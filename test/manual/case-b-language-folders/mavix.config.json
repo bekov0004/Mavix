@@ -1,0 +1,6 @@
+{
+  "languages": {
+    "en": "src/i18n/en",
+    "ru": "src/i18n/ru"
+  }
+}

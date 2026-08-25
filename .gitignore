@@ -142,6 +142,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
-mavix.config.json
-locales/
+/mavix.config.json
+/locales/
 .idea/

@@ -2,7 +2,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'path';
 
-import { scanSources } from '../src/server/scanner.mjs';
+import { scanSources } from '../../src/server/scanner.mjs';
 import { makeTmpDir, writeJson, rmDir } from './helpers.mjs';
 
 describe('scanner.mjs scanSources', () => {
