@@ -363,7 +363,7 @@ onMounted(() => {
     <main class="p-8">
       <div v-if="!loading" class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden dark:bg-slate-900 dark:border-slate-800 flex flex-col">
         <div class="overflow-x-auto">
-          <table class="w-full border-collapse text-left table-fixed">
+          <table class="w-full border-separate border-spacing-0 text-left table-fixed">
             <colgroup>
               <col class="w-64" />
               <col v-for="lang in languages" :key="lang" />
@@ -412,7 +412,7 @@ onMounted(() => {
                       rows="1"
                       :data-cell="cellId(key, lang)"
                       :disabled="pendingDelete.has(key)"
-                      class="w-full p-2 text-sm bg-white border border-indigo-500 rounded-lg outline-none transition-all resize-none overflow-hidden dark:text-slate-200 dark:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
+                      class="block w-full p-2 text-sm bg-white border border-indigo-500 rounded-lg outline-none transition-all resize-none overflow-hidden dark:text-slate-200 dark:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
                       @input="(e) => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px' }"
                       @blur="stopEditing"
                   ></textarea>
