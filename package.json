@@ -14,7 +14,8 @@
     "gui:dev": "cd gui && npm run dev",
     "gui:build": "cd gui && npm run build",
     "prepublishOnly": "npm run gui:build",
-    "start": "node bin/cli.mjs"
+    "start": "node bin/cli.mjs",
+    "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
     "express": "^4.18.2",
