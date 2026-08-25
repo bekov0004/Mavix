@@ -76,6 +76,30 @@ export const scanSources = async (config) => {
         return sourcesByLang;
     }
 
+    if (config.mode === 'namespacesPath') {
+        const nsEntries = await fs.readdir(config.namespacesPath, { withFileTypes: true });
+        const namespaceDirs = nsEntries.filter((e) => e.isDirectory());
+
+        for (const nsEntry of namespaceDirs) {
+            const namespace = nsEntry.name;
+            const nsPath = path.join(config.namespacesPath, namespace);
+            const langEntries = await fs.readdir(nsPath, { withFileTypes: true });
+            const jsonFiles = langEntries.filter((e) => e.isFile() && e.name.endsWith('.json'));
+
+            for (const entry of jsonFiles) {
+                const lang = path.basename(entry.name, '.json');
+                const filePath = path.join(nsPath, entry.name);
+                const data = await readJson(filePath);
+                if (data !== undefined) {
+                    if (!sourcesByLang.has(lang)) sourcesByLang.set(lang, []);
+                    sourcesByLang.get(lang).push({ filePath, namespace, data });
+                }
+            }
+        }
+
+        return sourcesByLang;
+    }
+
     // localesPath mode (flat, backwards compatible)
     const dirEntries = await fs.readdir(config.localesPath, { withFileTypes: true });
     const jsonFiles = dirEntries.filter(e => e.isFile() && e.name.endsWith('.json'));

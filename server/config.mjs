@@ -6,9 +6,10 @@ const CONFIG_FILENAME = 'mavix.config.json';
 
 /**
  * Loads and normalizes mavix.config.json.
- * Returns either:
+ * Returns one of:
  *   { mode: 'languages', languages: { [lang]: absolutePath } }
  *   { mode: 'localesPath', localesPath: absolutePath }
+ *   { mode: 'namespacesPath', namespacesPath: absolutePath }
  */
 export const loadConfig = async () => {
     const configPath = path.join(process.cwd(), CONFIG_FILENAME);
@@ -44,7 +45,15 @@ export const loadConfig = async () => {
         return { mode: 'localesPath', localesPath: absolutePath };
     }
 
+    if (config.namespacesPath) {
+        const absolutePath = path.resolve(process.cwd(), config.namespacesPath);
+        if (!existsSync(absolutePath)) {
+            throw new Error(`The directory specified in namespacesPath "${config.namespacesPath}" does not exist.`);
+        }
+        return { mode: 'namespacesPath', namespacesPath: absolutePath };
+    }
+
     throw new Error(
-        `Configuration must specify either "languages" (map of lang -> path) or "localesPath" in ${CONFIG_FILENAME}.`
+        `Configuration must specify one of "languages", "localesPath" or "namespacesPath" in ${CONFIG_FILENAME}.`
     );
 };

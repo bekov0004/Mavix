@@ -40,6 +40,27 @@ const resolveTargetFile = async (config, lang, namespace, dataCache) => {
         return filePath;
     }
 
+    if (config.mode === 'namespacesPath') {
+        if (!namespace) {
+            const err = new Error(
+                `Cannot add key for language "${lang}": key must specify a namespace (e.g. "common:my.key") in namespacesPath mode.`
+            );
+            err.status = 400;
+            throw err;
+        }
+
+        const filePath = path.join(config.namespacesPath, namespace, `${lang}.json`);
+        if (!dataCache.has(filePath)) {
+            if (existsSync(filePath)) {
+                dataCache.set(filePath, JSON.parse(await fs.readFile(filePath, 'utf-8')));
+            } else {
+                await fs.mkdir(path.dirname(filePath), { recursive: true });
+                dataCache.set(filePath, {});
+            }
+        }
+        return filePath;
+    }
+
     const targetBase = config.languages[lang];
     if (!targetBase) {
         const err = new Error(`Unknown language "${lang}": no entry in config.languages.`);

@@ -81,12 +81,38 @@ describe('config.mjs loadConfig', () => {
         }
     });
 
-    test('throws when neither "languages" nor "localesPath" is present', async () => {
+    test('throws when no known config key is present', async () => {
         const dir = await makeTmpDir();
         try {
             await writeJson(path.join(dir, 'mavix.config.json'), { foo: 'bar' });
             await withCwd(dir, async () => {
-                await assert.rejects(() => loadConfig(), /must specify either/);
+                await assert.rejects(() => loadConfig(), /must specify one of/);
+            });
+        } finally {
+            await rmDir(dir);
+        }
+    });
+
+    test('resolves "namespacesPath" mode when the directory exists', async () => {
+        const dir = await makeTmpDir();
+        try {
+            const nsDir = path.join(dir, 'locales');
+            await (await import('fs/promises')).mkdir(nsDir);
+            await writeJson(path.join(dir, 'mavix.config.json'), { namespacesPath: 'locales' });
+            const config = await withCwd(dir, () => loadConfig());
+            assert.equal(config.mode, 'namespacesPath');
+            assert.equal(config.namespacesPath, nsDir);
+        } finally {
+            await rmDir(dir);
+        }
+    });
+
+    test('throws when namespacesPath directory does not exist', async () => {
+        const dir = await makeTmpDir();
+        try {
+            await writeJson(path.join(dir, 'mavix.config.json'), { namespacesPath: 'does-not-exist' });
+            await withCwd(dir, async () => {
+                await assert.rejects(() => loadConfig(), /does not exist/);
             });
         } finally {
             await rmDir(dir);

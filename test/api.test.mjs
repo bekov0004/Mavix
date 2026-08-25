@@ -77,6 +77,58 @@ describe('server API (localesPath mode)', () => {
     });
 });
 
+describe('server API (namespacesPath mode)', () => {
+    let dir, server, baseUrl, originalCwd;
+
+    beforeEach(async () => {
+        dir = await makeTmpDir();
+        await writeJson(path.join(dir, 'locales/common/en.json'), { welcome: 'Welcome' });
+        await writeJson(path.join(dir, 'locales/common/ru.json'), { welcome: 'Привет' });
+        await writeJson(path.join(dir, 'mavix.config.json'), { namespacesPath: 'locales' });
+
+        originalCwd = process.cwd();
+        process.chdir(dir);
+
+        server = await startServer();
+        baseUrl = `http://localhost:${server.address().port}`;
+    });
+
+    afterEach(async () => {
+        await stopServer(server);
+        process.chdir(originalCwd);
+        await rmDir(dir);
+    });
+
+    test('GET /api/translations returns namespaced uiKeys', async () => {
+        const res = await fetch(`${baseUrl}/api/translations`);
+        const body = await res.json();
+        assert.deepEqual(body.translations, { 'common:welcome': { en: 'Welcome', ru: 'Привет' } });
+    });
+
+    test('POST /api/save writes a new key into {namespace}/{lang}.json', async () => {
+        const res = await fetch(`${baseUrl}/api/save`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ changes: [{ uiKey: 'forms:submit', lang: 'en', value: 'Submit' }] }),
+        });
+        assert.equal(res.status, 200);
+
+        const onDisk = await readJson(path.join(dir, 'locales/forms/en.json'));
+        assert.equal(onDisk.submit, 'Submit');
+    });
+
+    test('POST /api/save rejects a new key without a namespace', async () => {
+        const res = await fetch(`${baseUrl}/api/save`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ changes: [{ uiKey: 'noNamespace', lang: 'en', value: 'x' }] }),
+        });
+        assert.equal(res.status, 400);
+        const body = await res.json();
+        assert.match(body.error, /namespace/);
+    });
+});
+
 describe('server API (languages / namespace mode)', () => {
     let dir, server, baseUrl, originalCwd;
 

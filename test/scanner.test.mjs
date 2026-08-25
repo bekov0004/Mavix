@@ -70,6 +70,31 @@ describe('scanner.mjs scanSources', () => {
         }
     });
 
+    test('namespacesPath mode reads {namespace}/{lang}.json files', async () => {
+        const dir = await makeTmpDir();
+        try {
+            await writeJson(path.join(dir, 'common', 'en.json'), { welcome: 'Welcome' });
+            await writeJson(path.join(dir, 'common', 'ru.json'), { welcome: 'Привет' });
+            await writeJson(path.join(dir, 'forms', 'en.json'), { submit: 'Submit' });
+
+            const sources = await scanSources({ mode: 'namespacesPath', namespacesPath: dir });
+
+            assert.deepEqual([...sources.keys()].sort(), ['en', 'ru']);
+            const enFiles = sources.get('en');
+            assert.deepEqual(
+                enFiles.map((f) => f.namespace).sort(),
+                ['common', 'forms']
+            );
+            assert.deepEqual(
+                enFiles.find((f) => f.namespace === 'common').data,
+                { welcome: 'Welcome' }
+            );
+            assert.equal(sources.get('ru').length, 1);
+        } finally {
+            await rmDir(dir);
+        }
+    });
+
     test('missing language path is skipped, not fatal', async () => {
         const dir = await makeTmpDir();
         try {
