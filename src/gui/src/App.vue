@@ -364,7 +364,7 @@ onMounted(() => {
             <colgroup>
               <col class="w-64" />
               <col v-for="lang in languages" :key="lang" />
-              <col class="w-20" />
+              <col class="w-28" />
             </colgroup>
             <thead>
             <tr class="bg-slate-50/50 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800">
@@ -378,7 +378,7 @@ onMounted(() => {
                   {{ lang }} <span class="w-4 inline-block">{{ sortKey === lang ? (sortOrder === 'asc' ? '↑' : '↓') : '' }}</span>
                 </div>
               </th>
-              <th class="p-6 text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 uppercase">Actions</th>
+              <th class="p-6 text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 uppercase whitespace-nowrap">Actions</th>
             </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
