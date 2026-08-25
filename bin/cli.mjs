@@ -29,7 +29,10 @@ const PORT = 4500;
 app.listen(PORT, async () => {
     console.log(`\x1b[32m✔ Mavix UI: http://localhost:${PORT}\x1b[0m`);
     try {
-        await open(`http://localhost:${PORT}`);
+        const child = await open(`http://localhost:${PORT}`);
+        child.once('error', () => {
+            console.log('Browser could not be opened automatically.');
+        });
     } catch (err) {
         console.log('Browser could not be opened automatically.');
     }
