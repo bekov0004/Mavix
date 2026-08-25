@@ -360,10 +360,15 @@ onMounted(() => {
     <main class="p-8">
       <div v-if="!loading" class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden dark:bg-slate-900 dark:border-slate-800 flex flex-col">
         <div class="overflow-x-auto">
-          <table class="w-full border-collapse text-left">
+          <table class="w-full border-collapse text-left table-fixed">
+            <colgroup>
+              <col class="w-64" />
+              <col v-for="lang in languages" :key="lang" />
+              <col class="w-20" />
+            </colgroup>
             <thead>
             <tr class="bg-slate-50/50 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800">
-              <th @click="toggleSort('key')" class="p-6 text-[10px] font-black uppercase tracking-[0.2em] w-64 cursor-pointer select-none transition-colors group">
+              <th @click="toggleSort('key')" class="p-6 text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer select-none transition-colors group">
                 <div class="flex items-center gap-2" :class="sortKey === 'key' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200'">
                   Translation Key <span class="w-4 inline-block">{{ sortKey === 'key' ? (sortOrder === 'asc' ? '↑' : '↓') : '' }}</span>
                 </div>
@@ -373,7 +378,7 @@ onMounted(() => {
                   {{ lang }} <span class="w-4 inline-block">{{ sortKey === lang ? (sortOrder === 'asc' ? '↑' : '↓') : '' }}</span>
                 </div>
               </th>
-              <th class="p-6 w-20 text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 uppercase">Actions</th>
+              <th class="p-6 text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 uppercase">Actions</th>
             </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
