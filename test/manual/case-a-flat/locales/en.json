@@ -1,4 +1,33 @@
 {
-  "welcome": "Welcome",
-  "buttons": { "save": "Save" }
+  "nav": {
+    "home": "Home",
+    "pricing": "Pricing",
+    "about": "About us",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Build faster, ship sooner",
+    "subtitle": "Everything you need to launch your product in one place",
+    "cta": "Get started for free"
+  },
+  "pricing": {
+    "free": "Free",
+    "pro": "Pro",
+    "enterprise": "Enterprise",
+    "perMonth": "per month"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Something went wrong"
+  }
 }

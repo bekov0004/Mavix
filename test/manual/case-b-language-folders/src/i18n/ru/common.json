@@ -1,1 +1,7 @@
-{ "welcome": "Добро пожаловать", "save": "Сохранить" }
+{
+  "appName": "JobBoard",
+  "search": "Поиск",
+  "filters": "Фильтры",
+  "loading": "Загрузка...",
+  "noResults": "Ничего не найдено"
+}

@@ -1,1 +1,7 @@
-{ "welcome": "Welcome", "save": "Save" }
+{
+  "appName": "JobBoard",
+  "search": "Search",
+  "filters": "Filters",
+  "loading": "Loading...",
+  "noResults": "No results found"
+}

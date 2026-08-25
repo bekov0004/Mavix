@@ -1,0 +1,7 @@
+{
+  "title": "Оформление заказа",
+  "shippingAddress": "Адрес доставки",
+  "paymentMethod": "Способ оплаты",
+  "placeOrder": "Оформить заказ",
+  "orderConfirmed": "Заказ подтверждён"
+}

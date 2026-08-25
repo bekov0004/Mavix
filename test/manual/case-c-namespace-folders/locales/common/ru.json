@@ -1,1 +1,7 @@
-{ "welcome": "Добро пожаловать", "save": "Сохранить" }
+{
+  "appName": "ShopEasy",
+  "home": "Главная",
+  "products": "Товары",
+  "categories": "Категории",
+  "account": "Мой аккаунт"
+}

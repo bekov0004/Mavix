@@ -1,1 +1,7 @@
-{ "welcome": "Welcome", "save": "Save" }
+{
+  "appName": "ShopEasy",
+  "home": "Home",
+  "products": "Products",
+  "categories": "Categories",
+  "account": "My account"
+}
