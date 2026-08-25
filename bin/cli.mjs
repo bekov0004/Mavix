@@ -4,7 +4,7 @@ import open from 'open';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
-import apiRouter from '../server/index.mjs';
+import apiRouter from '../src/server/index.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use('/api', apiRouter);
 
-const distPath = path.join(__dirname, '../gui/dist');
+const distPath = path.join(__dirname, '../src/gui/dist');
 
 if (existsSync(distPath)) {
     app.use(express.static(distPath));

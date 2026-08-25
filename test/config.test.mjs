@@ -2,7 +2,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'path';
 
-import { loadConfig } from '../server/config.mjs';
+import { loadConfig } from '../src/server/config.mjs';
 import { makeTmpDir, writeJson, rmDir } from './helpers.mjs';
 
 const withCwd = async (dir, fn) => {

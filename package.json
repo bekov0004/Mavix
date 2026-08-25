@@ -7,12 +7,12 @@
   },
   "files": [
     "bin/",
-    "server/",
-    "gui/dist/"
+    "src/server/",
+    "src/gui/dist/"
   ],
   "scripts": {
-    "gui:dev": "cd gui && npm run dev",
-    "gui:build": "cd gui && npm run build",
+    "gui:dev": "cd src/gui && npm run dev",
+    "gui:build": "cd src/gui && npm run build",
     "prepublishOnly": "npm run gui:build",
     "start": "node bin/cli.mjs",
     "test": "node --test test/*.test.mjs"
