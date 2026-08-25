@@ -17,14 +17,17 @@ const fileInput = ref(null);
 
 const editingCell = ref(null);
 const cellId = (key, lang) => `${key}::${lang}`;
-const startEditing = async (key, lang) => {
+const startEditing = async (key, lang, divEl) => {
+  const startHeight = divEl?.offsetHeight;
   editingCell.value = cellId(key, lang);
   await nextTick();
   const el = document.querySelector(`textarea[data-cell="${CSS.escape(cellId(key, lang))}"]`);
   if (el) {
+    if (startHeight) el.style.height = startHeight + 'px';
     el.focus();
-    el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px';
+    if (el.scrollHeight > el.clientHeight) {
+      el.style.height = el.scrollHeight + 'px';
+    }
   }
 };
 const stopEditing = () => {
@@ -396,7 +399,7 @@ onMounted(() => {
               <td v-for="lang in languages" :key="lang" class="p-4 max-w-xs">
                   <div
                       v-if="editingCell !== cellId(key, lang)"
-                      @click="!pendingDelete.has(key) && startEditing(key, lang)"
+                      @click="(e) => !pendingDelete.has(key) && startEditing(key, lang, e.currentTarget)"
                       class="w-full max-w-xs p-2 text-sm truncate rounded-lg border border-transparent transition-all dark:text-slate-200"
                       :class="[
                         !pendingDelete.has(key) ? 'cursor-text hover:border-slate-200 dark:hover:border-slate-700' : 'cursor-not-allowed opacity-30',
